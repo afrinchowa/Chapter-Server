@@ -28,22 +28,32 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-const blogCollection = client.db('Chapter').collection('blog');  
-    app.post('/blog', async(req,res) =>{
-        const newBlog = req.body;
-        console.log(newBlog);
-        const result =await blogCollection.insertOne(newBlog);
-        res.send(result);
-    })
+
+   
 
 
 
-const blogCollection =client.db('Chapter').collection('Blogs');  
-
+const blogCollection =client.db('Chapter').collection('Blogs'); 
+const addBlogCollection =client.db('Chapter').collection('addBlog') ;
+// Blog collection
 app.get('/blogs', async(req,res) => {
     const cursor =blogCollection.find();
     const result =await cursor.toArray();
     res.send(result);
+})
+
+// addBlog collection
+app.post('/blog', async(req,res) =>{
+    const newBlog = req.body;
+    console.log(newBlog);
+    const result =await addBlogCollection.insertOne(newBlog);
+    res.send(result);
+})
+
+app.get('/blog',async(req,res) => {
+  const cursor =addBlogCollection.find();
+  const result = await cursor.toArray();
+  res.send(result);
 })
 
 
