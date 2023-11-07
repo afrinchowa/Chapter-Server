@@ -59,21 +59,24 @@ async function run() {
       res.send(result);
     });
 
-    app.put("/blog/:id", async (req, res) =>{
+    app.put("/blog/:id", async (req, res) => {
       const id = req.params.id;
-      const filter ={_id:new ObjectId(id)}
-      const options ={upsert:true};
-      const updatedBlog ={
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateBlog = req.body;
+      const blog = {
         $set: {
-            title:updatedBlog.name,
-            category:updatedBlog.category,
-            date:updatedBlog.date,
-            short_description:updatedBlog.short_description,
-            long_description:updatedBlog.long_description,
-            photoUrl:updatedBlog.photoUrl
-        }
-      }
-    })
+          title: updateBlog.name,
+          category: updateBlog.category,
+          date: updateBlog.date,
+          short_description: updateBlog.short_description,
+          long_description: updateBlog.long_description,
+          photoUrl: updateBlog.photoUrl,
+        },
+      };
+      const result = await addBlogCollection.updateOne(filter, blog, options);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
