@@ -59,6 +59,22 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/blog/:id", async (req, res) =>{
+      const id = req.params.id;
+      const filter ={_id:new ObjectId(id)}
+      const options ={upsert:true};
+      const updatedBlog ={
+        $set: {
+            title:updatedBlog.name,
+            category:updatedBlog.category,
+            date:updatedBlog.date,
+            short_description:updatedBlog.short_description,
+            long_description:updatedBlog.long_description,
+            photoUrl:updatedBlog.photoUrl
+        }
+      }
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
