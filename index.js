@@ -64,19 +64,50 @@ async function run() {
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
       const updateBlog = req.body;
+      console.log(updateBlog)
       const blog = {
         $set: {
-          title: updateBlog.name,
+          title: updateBlog.title,
           category: updateBlog.category,
           date: updateBlog.date,
-          short_description: updateBlog.short_description,
-          long_description: updateBlog.long_description,
+          shortDescription: updateBlog.shortDescription,
+          longDescription: updateBlog.longDescription,
           photoUrl: updateBlog.photoUrl,
         },
       };
       const result = await addBlogCollection.updateOne(filter, blog, options);
       res.send(result);
     });
+// pageDetails
+app.get('/blog/:id',async(req, res) =>{
+  const id = req.params.id;
+  const query ={_id: new ObjectId(id)}
+
+  const options = {
+    // Include only the `title` and `imdb` fields in the returned document
+    projection: { _id: 1, title: 1, category:1,shortDescription:1,longDescription:1,photoUrl:1},
+  };
+
+  const result = await addBlogCollection.findOne(query,options);
+  res.send(result);
+})
+
+
+
+
+// WishList
+app.get('/blog',async(req,res) =>{
+  console.log(req.query.email);
+  let query = {};
+  if(req.query?.email){
+    query ={email: req.query.email}
+  }
+  const result =await addBlogCollection.find(express.query).toArray();
+  res.send(result);
+})
+
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
